@@ -23,7 +23,7 @@ public class ChatController {
 
     @MessageMapping("/message")  // url -> /app/message/username
     public Message receiveMessage(@Payload Message message) {
-        simpMessagingTemplate.convertAndSend(message.getRecipient(), message);
+        simpMessagingTemplate.convertAndSend("/user/"+message.getRecipient(), message);
         return message;
     }
 

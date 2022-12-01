@@ -19,6 +19,7 @@
             <form class="form-inline">
                 <div class="form-group">
                     <label for="connect">WebSocket connection:</label>
+                    <input type="text" id="username" class="form-control" placeholder="Your username here...">
                     <button id="connect" class="btn btn-default" type="submit">Connect</button>
                     <button id="disconnect" class="btn btn-default" type="submit" disabled="disabled">Disconnect
                     </button>
@@ -28,24 +29,41 @@
         <div class="col-md-6">
             <form class="form-inline">
                 <div class="form-group">
-                    <label for="name">Name</label>
-                    <input type="text" id="name" class="form-control" placeholder="Your name here...">
-                    <label for="name">Message</label>
-                    <input type="text" id="message" class="form-control" placeholder="Your message here...">
+                    <label for="sender">Sender</label>
+                    <input type="text" id="sender" class="form-control" placeholder="sender here...">
+                    <label for="message">Message</label>
+                    <input type="text" id="message" class="form-control" placeholder="message here...">
+                    <label for="recipient">Recipient</label>
+                    <input type="text" id="recipient" class="form-control" placeholder="recipient here...">
                 </div>
+                <button id="sendAll" class="btn btn-default" type="submit">Send Public</button>
                 <button id="send" class="btn btn-default" type="submit">Send</button>
             </form>
         </div>
     </div>
     <div class="row">
         <div class="col-md-12">
+            <table id="conversation-public" class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Public Channel</th>
+                </tr>
+                </thead>
+                <tbody id="messages-public">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
             <table id="conversation" class="table table-striped">
                 <thead>
                 <tr>
-                    <th>Greetings</th>
+                    <th>Private Channel</th>
                 </tr>
                 </thead>
-                <tbody id="greetings">
+                <tbody id="messages">
                 </tbody>
             </table>
         </div>

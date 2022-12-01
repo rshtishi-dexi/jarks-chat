@@ -13,13 +13,24 @@ function setConnected(connected) {
 
 function connect() {
     var socket = new SockJS('/jarks-ws');
+
     stompClient = Stomp.over(socket);
+
     stompClient.connect({}, function (frame) {
+
         setConnected(true);
         console.log('Connected: ' + frame);
-        stompClient.subscribe('/jarks', function (greeting) {
-            console.log(greeting);
-            showGreeting(JSON.parse(greeting.body).sender, JSON.parse(greeting.body).content);
+
+        //subscribe to public channel
+        stompClient.subscribe('/jarks', function (message) {
+            console.log(message);
+            showPublicMessages(JSON.parse(message.body).sender, JSON.parse(message.body).content);
+        });
+
+        //subscribe to private channel
+        stompClient.subscribe("/user/"+$("#username").val(),function (message){
+            console.log(message)
+            showMessages(JSON.parse(message.body).sender, JSON.parse(message.body).content);
         });
     });
 }
@@ -32,15 +43,30 @@ function disconnect() {
     console.log("Disconnected");
 }
 
-function sendName() {
+function sendPublicMessage() {
     stompClient.send("/app/message/public", {}, JSON.stringify({
-        'sender': $("#name").val(),
+        'sender': $("#sender").val(),
         'content': $("#message").val()
     }));
 }
 
-function showGreeting(sender, message) {
-    $("#greetings").append("<tr><td>" + sender + "</td></td><td>" + message + "</td></tr>");
+function sendMessage() {
+
+    $("#messages").append("<tr><td>" + $("#sender").val() + "</td></td><td>" + $("#message").val() + "</td></tr>");
+
+    stompClient.send("/app/message", {}, JSON.stringify({
+        'sender': $("#sender").val(),
+        'content': $("#message").val(),
+        'recipient': $("#recipient").val()
+    }));
+}
+
+function showPublicMessages(sender, message) {
+    $("#messages-public").append("<tr><td>" + sender + "</td></td><td>" + message + "</td></tr>");
+}
+
+function showMessages(sender, message) {
+    $("#messages").append("<tr><td>" + sender + "</td></td><td>" + message + "</td></tr>");
 }
 
 $(function () {
@@ -53,7 +79,10 @@ $(function () {
     $("#disconnect").click(function () {
         disconnect();
     });
+    $("#sendAll").click(function () {
+        sendPublicMessage();
+    });
     $("#send").click(function () {
-        sendName();
+        sendMessage();
     });
 });
