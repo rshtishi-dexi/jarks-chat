@@ -21,6 +21,12 @@ function connect() {
         setConnected(true);
         console.log('Connected: ' + frame);
 
+        //send join event
+        stompClient.send("/app/join", {}, JSON.stringify({
+            'sender': $("#username").val(),
+            'type': 'JOIN'
+        }));
+
         //subscribe to public channel
         stompClient.subscribe('/jarks', function (message) {
             console.log(message);
@@ -28,19 +34,35 @@ function connect() {
         });
 
         //subscribe to private channel
-        stompClient.subscribe("/user/"+$("#username").val(),function (message){
+        stompClient.subscribe("/user/" + $("#username").val(), function (message) {
             console.log(message)
             showMessages(JSON.parse(message.body).sender, JSON.parse(message.body).content);
+        });
+
+        //subscribe to private channel
+        stompClient.subscribe("/events", function (message) {
+            console.log(message)
+            showUsers(JSON.parse(message.body).sender, JSON.parse(message.body).type);
+            if (JSON.parse(message.body).type === 'LEAVE') {
+
+                if (stompClient !== null) {
+                    stompClient.disconnect();
+                }
+                setConnected(false);
+                console.log("Disconnected");
+
+            }
         });
     });
 }
 
 function disconnect() {
-    if (stompClient !== null) {
-        stompClient.disconnect();
-    }
-    setConnected(false);
-    console.log("Disconnected");
+    //send leave event
+    stompClient.send("/app/leave", {}, JSON.stringify({
+        'sender': $("#username").val(),
+        'type': 'LEAVE'
+    }));
+
 }
 
 function sendPublicMessage() {
@@ -67,6 +89,10 @@ function showPublicMessages(sender, message) {
 
 function showMessages(sender, message) {
     $("#messages").append("<tr><td>" + sender + "</td></td><td>" + message + "</td></tr>");
+}
+
+function showUsers(sender, type) {
+    $("#users").append("<tr><td>" + sender + "</td></td><td>" + type + "</td></tr>");
 }
 
 $(function () {

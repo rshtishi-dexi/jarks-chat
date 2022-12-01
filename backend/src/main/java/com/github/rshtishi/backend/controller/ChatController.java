@@ -23,18 +23,21 @@ public class ChatController {
 
     @MessageMapping("/message")  // url -> /app/message/username
     public Message receiveMessage(@Payload Message message) {
-        simpMessagingTemplate.convertAndSend("/user/"+message.getRecipient(), message);
+        simpMessagingTemplate.convertAndSend("/user/" + message.getRecipient(), message);
         return message;
     }
 
-    /*
-    @MessageMapping("/chat.connect")
-    @SendTo("/topic/public")
-    public Message connect(@Payload final Message message, SimpMessageHeaderAccessor headerAccessor) {
-        headerAccessor.getSessionAttributes().put("username", message.getSender());
+
+    @MessageMapping("/leave")
+    public Message leave(@Payload final Message message) {
+        simpMessagingTemplate.convertAndSend("/events", message);
         return message;
     }
 
-     */
+    @MessageMapping("/join")
+    public Message join(@Payload final Message message) {
+        simpMessagingTemplate.convertAndSend("/events", message);
+        return message;
+    }
 
 }
