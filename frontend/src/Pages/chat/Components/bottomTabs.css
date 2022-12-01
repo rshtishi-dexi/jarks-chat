@@ -1,0 +1,36 @@
+:root {
+  --tabs-height: 50px;
+}
+
+.tabs-container {
+  background-color: aliceblue;
+}
+.react-tabs {
+  width: 100%;
+  display: flex;
+  text-align: center;
+  align-content: center;
+  flex-direction: column-reverse;
+}
+.react-tabs__tab-list {
+  height: var(--tabs-height);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+.react-tabs__tab-panel--selected {
+  height: calc(95vh - var(--tabs-height));
+  background-color: blue;
+}
+
+.react-tabs__tab{
+    height: var(--tabs-height);
+    list-style: none;
+    font-size: x-large;
+}
+
+.tab-title{
+
+    text-align: center;
+    width: auto;
+}

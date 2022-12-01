@@ -4,16 +4,17 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import LogInPage from './Pages/login/LogIn';
+import Chat from './Pages/chat/Chat';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 
-const isLoggedIn = ()=>false;
+const isLoggedIn = ()=>true;
 root.render(
   <React.StrictMode>
     {isLoggedIn()?
-     <>hello</>:
+     <Chat />:
      <LogInPage/>
     }
     {/* <App /> */}

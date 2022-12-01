@@ -1,0 +1,26 @@
+.user-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-left: 20px;
+  justify-content: start;
+  justify-items: center;
+  height: 80px;
+}
+
+.image-container {
+  height: 50px;
+  width: 50px;
+  max-width: 50px;
+  max-height: 50px;
+  padding-right: 16px;
+}
+
+.image-container img {
+  border-radius: 25px;
+  height: 50px;
+  width: 50px;
+  max-width: 50px;
+  max-height: 50px;
+  object-fit: cover;
+}

@@ -1,0 +1,18 @@
+.main-container{
+    background-color: aliceblue;
+    width:100vw;
+    height: 100vh;
+}
+.desktop-content{
+    width:100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: row;
+}
+.desktop-content .user-list{
+    height: 100vh;
+    width: var(--users-list-width) !important;
+}
+.users-name{
+    color:white;
+}

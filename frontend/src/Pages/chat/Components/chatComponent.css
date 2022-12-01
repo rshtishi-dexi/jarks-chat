@@ -1,0 +1,42 @@
+:root {
+  --top-bar-height: 60px;
+  --users-list-width:25%;
+}
+
+.chatarea {
+  width: calc( 100vw - var(--users-list-width ));
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: aquamarine;
+}
+
+.top-bar {
+  height: var(--top-bar-height);
+  position: relative;
+  top: 0;
+  width: 100vw;
+  background-color: white;
+  box-shadow: 1px 1px 10px -1px #ccc;
+}
+
+.back-button {
+  height: calc(var(--top-bar-height) - 20px);
+  width: 100px;
+  margin: 10px !important;
+  margin-left: 30px !important;
+}
+.chat-conversation {
+  background-color: blueviolet;
+  height: calc( 100vh - 2* var(--top-bar-height) );
+  margin-top: var(--top-bar-height);
+}
+
+.chat-text-area {
+  height: var(--top-bar-height);
+  position: relative;
+  bottom: 0;
+  width: 100vw;
+  background-color: white;
+  box-shadow: 1px 1px 10px -1px #ccc;
+}
