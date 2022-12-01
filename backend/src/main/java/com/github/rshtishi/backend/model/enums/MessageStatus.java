@@ -1,4 +1,4 @@
-package com.github.rshtishi.backend.enums;
+package com.github.rshtishi.backend.model.enums;
 
 public enum MessageStatus {
 

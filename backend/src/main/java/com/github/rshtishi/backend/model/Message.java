@@ -1,7 +1,7 @@
 package com.github.rshtishi.backend.model;
 
-import com.github.rshtishi.backend.enums.MessageStatus;
-import com.github.rshtishi.backend.enums.MessageType;
+import com.github.rshtishi.backend.model.enums.MessageStatus;
+import com.github.rshtishi.backend.model.enums.MessageType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
