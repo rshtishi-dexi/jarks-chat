@@ -16,7 +16,7 @@ public class ChatController {
     private SimpMessagingTemplate simpMessagingTemplate;
 
     @MessageMapping("/message/public") // url -> /app/message/public
-    @SendTo("/jarks/public")
+    @SendTo("/jarks")
     public Message receivePublicMessage(@Payload final Message message) {
         return message;
     }
