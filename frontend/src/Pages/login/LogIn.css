@@ -7,6 +7,7 @@
     justify-content: center;
     height: 100vh;
     background-color: #633D6D;
+    transition: all 500ms;
 }
 
 .login-input{
@@ -36,4 +37,17 @@
 
 .login-input-container{
     padding: 10px;
+}
+
+.dark {
+    background-color: #333;
+    color: #fff;
+    }
+.light {
+    background-color: #fff;
+    color: #333;
+    }
+.toggleTheme
+{
+    float: right;
 }
