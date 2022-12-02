@@ -1,22 +1,42 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-import LogInPage from './Pages/login/LogIn';
+import React, { useState } from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import reportWebVitals from "./reportWebVitals";
+import LogInPage from "./Pages/login/LogIn";
+import Chat from "./Pages/chat/Chat";
+
 
 const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
+  document.getElementById("root") as HTMLElement
 );
+const App = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [id, setId] = useState("");
 
-const isLoggedIn = ()=>false;
+
+
+  return (
+    <>
+      {(isLoggedIn) ? (
+        <Chat
+
+
+
+        />
+      ) : (
+        <LogInPage
+          connect={(name: string) => {
+            setIsLoggedIn(true)
+            setId(name)
+          }}
+        />
+      )}
+    </>
+  );
+};
 root.render(
   <React.StrictMode>
-    {isLoggedIn()?
-     <>hello</>:
-     <LogInPage/>
-    }
-    {/* <App /> */}
+    <App />
   </React.StrictMode>
 );
 

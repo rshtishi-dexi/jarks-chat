@@ -2,14 +2,15 @@ import React, { CSSProperties, useEffect, useState } from "react";
 import { Button, rgbToHex, TextField } from "@mui/material";
 import "./LogIn.css";
 import logo from "./jark1.gif";
-import { User } from "../../jark.models";
+import { connect } from "http2";
+
 
 export interface LogInPageProps {
   theme: string
   setTheme: (name: string) => void;
 }
 
-const LogInPage = () => {
+const LogInPage = (props: { connect: (name: string) => void }) => {
   ;
   const [isLogIn, setIsLogIn] = useState(false);
   const [backgroundColor, setBackgroundColor] = useState("rgb(99,61,109)");
@@ -29,8 +30,29 @@ const LogInPage = () => {
       password: password
     };
 
+
+    fetch("http://localhost:8090/signin", {
+
+      method: 'POST',
+      body: JSON.stringify(user),
+      headers: new Headers({
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      })
+    }).then(response => response.json())
+      .then(responseJson => {
+        if (responseJson == true) {
+          console.log(props.connect)
+          props.connect(username)
+
+        }
+
+        console.log(responseJson)
+      });
+
     setUsername('');
     setPassword('');
+
   };
   const handleRegister = (event: any) => {
     console.log('handleSubmit ran');
@@ -46,14 +68,19 @@ const LogInPage = () => {
       password: password
     };
 
-    fetch("http://localhost:8090/signin", {
+    fetch("http://localhost:8090/register", {
 
       method: 'POST',
       body: JSON.stringify(user),
       headers: new Headers({
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
       })
-    });
+    }).then(response => response.json())
+      .then(responseJson => {
+        console.log(responseJson)
+
+      });
 
     setUsername('');
     setPassword('');
