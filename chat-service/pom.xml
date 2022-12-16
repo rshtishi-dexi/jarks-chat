@@ -8,8 +8,8 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>backend</artifactId>
-    <name>backend</name>
+    <artifactId>chat-service</artifactId>
+    <name>chat-service</name>
 
     <dependencies>
 
@@ -78,7 +78,7 @@
                             </classPatterns>
                             <outputKind>module</outputKind>
                             <outputFileType>implementationFile</outputFileType>
-                            <outputFile>../frontend/jarks.model.ts</outputFile>
+                            <outputFile>../model/jarks.model.ts</outputFile>
                         </configuration>
                         <executions>
                             <execution>

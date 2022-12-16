@@ -19,8 +19,9 @@
     </properties>
 
     <modules>
-        <module>backend</module>
-        <module>frontend</module>
+        <module>chat-service</module>
+        <module>ui-react</module>
+        <module>ui-angular</module>
     </modules>
 
     <build>
