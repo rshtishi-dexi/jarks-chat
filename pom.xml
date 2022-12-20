@@ -20,8 +20,8 @@
 
     <modules>
         <module>chat-service</module>
-        <module>ui-react</module>
         <module>ui-angular</module>
+        <module>ui-react</module>
     </modules>
 
     <build>
