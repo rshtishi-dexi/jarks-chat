@@ -1,87 +1,161 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Hello WebSocket</title>
+    <title>Jarks Chat</title>
+
+    <!-- Css Imports-->
     <link href="/webjars/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/main.css" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="/login.css" rel="stylesheet">
+    <link href="/chat-page.css" rel="stylesheet">
+
+    <!-- Javascript Imports -->
     <script src="/webjars/jquery/jquery.min.js"></script>
+    <script src="/webjars/bootstrap/3.3.7/js/bootstrap.js"></script>
     <script src="/webjars/sockjs-client/sockjs.min.js"></script>
     <script src="/webjars/stomp-websocket/stomp.min.js"></script>
     <script src="/app.js"></script>
 </head>
 <body>
-<noscript><h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websocket relies on Javascript being
-    enabled. Please enable
-    Javascript and reload this page!</h2></noscript>
-<div id="main-content" class="container">
-    <div class="row">
-        <div class="col-md-6">
-            <form class="form-inline">
-                <div class="form-group">
-                    <label for="connect">WebSocket connection:</label>
-                    <input type="text" id="username" class="form-control" placeholder="Your username here...">
-                    <button id="connect" class="btn btn-default" type="submit">Connect</button>
-                    <button id="disconnect" class="btn btn-default" type="submit" disabled="disabled">Disconnect
-                    </button>
-                </div>
+
+    <!-- Login Page -->
+    <div id="login-page" class="wrapper fadeInDown">
+        <div id="formContent">
+            <!-- Tabs Titles -->
+
+            <!-- Icon -->
+            <div class="fadeIn first">
+                <img src="images/user-icon.png" id="icon" alt="User Icon" />
+            </div>
+
+            <!-- Login Form -->
+            <form id="login-form">
+                <input type="text" id="login" class="fadeIn second" name="login" placeholder="username">
+                <input type="text" id="password" class="fadeIn third" name="login" placeholder="password">
+                <input type="submit" class="fadeIn fourth" value="Log In">
             </form>
-        </div>
-        <div class="col-md-6">
-            <form class="form-inline">
-                <div class="form-group">
-                    <label for="sender">Sender</label>
-                    <input type="text" id="sender" class="form-control" placeholder="sender here...">
-                    <label for="message">Message</label>
-                    <input type="text" id="message" class="form-control" placeholder="message here...">
-                    <label for="recipient">Recipient</label>
-                    <input type="text" id="recipient" class="form-control" placeholder="recipient here...">
-                </div>
-                <button id="sendAll" class="btn btn-default" type="submit">Send Public</button>
-                <button id="send" class="btn btn-default" type="submit">Send</button>
-            </form>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <table id="conversation-public" class="table table-striped">
-                <thead>
-                <tr>
-                    <th>Public Channel</th>
-                </tr>
-                </thead>
-                <tbody id="messages-public">
-                </tbody>
-            </table>
+
+            <!-- Remind Passowrd -->
+            <div id="formFooter">
+                <a class="underlineHover" href="#">Forgot Password?</a>
+            </div>
+
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-md-12">
-            <table id="conversation" class="table table-striped">
-                <thead>
-                <tr>
-                    <th>Private Channel</th>
-                </tr>
-                </thead>
-                <tbody id="messages">
-                </tbody>
-            </table>
+    <!-- Chat Page -->
+    <div id="chat-page" class="container">
+        <div class="row clearfix">
+            <div class="col-lg-12">
+                <div class="card chat-app">
+                    <div id="plist" class="people-list">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fa fa-search"></i></span>
+                            </div>
+                            <input type="text" class="form-control" placeholder="Search...">
+                        </div>
+                        <ul class="list-unstyled chat-list mt-2 mb-0">
+                            <li class="clearfix">
+                                <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="avatar">
+                                <div class="about">
+                                    <div class="name">Vincent Porter</div>
+                                    <div class="status"> <i class="fa fa-circle offline"></i> left 7 mins ago </div>
+                                </div>
+                            </li>
+                            <li class="clearfix active">
+                                <img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="avatar">
+                                <div class="about">
+                                    <div class="name">Aiden Chavez</div>
+                                    <div class="status"> <i class="fa fa-circle online"></i> online </div>
+                                </div>
+                            </li>
+                            <li class="clearfix">
+                                <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="avatar">
+                                <div class="about">
+                                    <div class="name">Mike Thomas</div>
+                                    <div class="status"> <i class="fa fa-circle online"></i> online </div>
+                                </div>
+                            </li>
+                            <li class="clearfix">
+                                <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="avatar">
+                                <div class="about">
+                                    <div class="name">Christian Kelly</div>
+                                    <div class="status"> <i class="fa fa-circle offline"></i> left 10 hours ago </div>
+                                </div>
+                            </li>
+                            <li class="clearfix">
+                                <img src="https://bootdey.com/img/Content/avatar/avatar8.png" alt="avatar">
+                                <div class="about">
+                                    <div class="name">Monica Ward</div>
+                                    <div class="status"> <i class="fa fa-circle online"></i> online </div>
+                                </div>
+                            </li>
+                            <li class="clearfix">
+                                <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="avatar">
+                                <div class="about">
+                                    <div class="name">Dean Henry</div>
+                                    <div class="status"> <i class="fa fa-circle offline"></i> offline since Oct 28 </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="chat">
+                        <div class="chat-header clearfix">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <a href="javascript:void(0);" data-toggle="modal" data-target="#view_info">
+                                        <img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="avatar">
+                                    </a>
+                                    <div class="chat-about">
+                                        <h6 class="m-b-0">Aiden Chavez</h6>
+                                        <small>Last seen: 2 hours ago</small>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 hidden-sm text-right">
+                                    <a href="javascript:void(0);" class="btn btn-outline-secondary"><i class="fa fa-camera"></i></a>
+                                    <a href="javascript:void(0);" class="btn btn-outline-primary"><i class="fa fa-image"></i></a>
+                                    <a href="javascript:void(0);" class="btn btn-outline-info"><i class="fa fa-cogs"></i></a>
+                                    <a href="javascript:void(0);" class="btn btn-outline-warning"><i class="fa fa-question"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chat-history">
+                            <ul class="m-b-0">
+                                <li class="clearfix">
+                                    <div class="message-data text-right">
+                                        <span class="message-data-time">10:10 AM, Today</span>
+                                        <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="avatar">
+                                    </div>
+                                    <div class="message other-message float-right"> Hi Aiden, how are you? How is the project coming along? </div>
+                                </li>
+                                <li class="clearfix">
+                                    <div class="message-data">
+                                        <span class="message-data-time">10:12 AM, Today</span>
+                                    </div>
+                                    <div class="message my-message">Are we meeting today?</div>
+                                </li>
+                                <li class="clearfix">
+                                    <div class="message-data">
+                                        <span class="message-data-time">10:15 AM, Today</span>
+                                    </div>
+                                    <div class="message my-message">Project has been already finished and I have results to show you.</div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="chat-message clearfix">
+                            <div class="input-group mb-0">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-send"></i></span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="Enter text here...">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-md-12">
-            <table id="" class="table table-striped">
-                <thead>
-                <tr>
-                    <th>Users</th>
-                </tr>
-                </thead>
-                <tbody id="users">
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
 </body>
 </html>

@@ -1,3 +1,4 @@
+
 var stompClient = null;
 
 function setConnected(connected) {
@@ -96,6 +97,15 @@ function showUsers(sender, type) {
 }
 
 $(function () {
+    console.log("Here");
+
+    $("#chat-page").hide();
+
+    $("#login-form").on('submit', function(e){
+        $("#chat-page").show();
+        $("#login-page").hide();
+    });
+
     $("form").on('submit', function (e) {
         e.preventDefault();
     });
