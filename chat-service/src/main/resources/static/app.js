@@ -1,17 +1,25 @@
-
 var stompClient = null;
 
+
 function setConnected(connected) {
-    $("#connect").prop("disabled", connected);
-    $("#disconnect").prop("disabled", !connected);
-    if (connected) {
-        $("#conversation").show();
-    } else {
-        $("#conversation").hide();
-    }
-    $("#greetings").html("");
+    localStorage.setItem("connected", JSON.stringify(connected));
 }
 
+function getConnected() {
+    return JSON.parse(localStorage.getItem("connected"));
+}
+
+function onConnected() {
+    if (getConnected()) {
+        $("#chat-page").show();
+        $("#login-page").hide();
+    } else {
+        $("#chat-page").hide();
+        $("#login-page").show();
+    }
+}
+
+// OLD METHODS
 function connect() {
     var socket = new SockJS('/jarks-ws');
 
@@ -96,29 +104,40 @@ function showUsers(sender, type) {
     $("#users").append("<tr><td>" + sender + "</td></td><td>" + type + "</td></tr>");
 }
 
+// END OF OLD METHODS
+
 $(function () {
-    console.log("Here");
 
-    $("#chat-page").hide();
+    //display correct view
+    onConnected();
 
-    $("#login-form").on('submit', function(e){
-        $("#chat-page").show();
-        $("#login-page").hide();
+    $("#login-form").on('submit', function (e) {
+
+        var username = $("#username").val();
+        var password = $("#password").val();
+        if (username && password) {
+            console.log(username);
+            console.log(password);
+            /**
+             * TO DO
+             * Authentication
+             */
+
+            //Connect
+            var socket = new SockJS('/jarks-ws');
+            stompClient = Stomp.over(socket);
+            stompClient.connect({}, function (frame) {
+
+                //change view
+                setConnected(true);
+                onConnected();
+
+            });
+
+            e.preventDefault();
+        }
+
     });
 
-    $("form").on('submit', function (e) {
-        e.preventDefault();
-    });
-    $("#connect").click(function () {
-        connect();
-    });
-    $("#disconnect").click(function () {
-        disconnect();
-    });
-    $("#sendAll").click(function () {
-        sendPublicMessage();
-    });
-    $("#send").click(function () {
-        sendMessage();
-    });
+    $()
 });
