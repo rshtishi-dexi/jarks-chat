@@ -51,5 +51,20 @@
             <artifactId>jedis</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>it.ozimov</groupId>
+            <artifactId>embedded-redis</artifactId>
+            <version>0.7.2</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-guava</artifactId>
+            <!-- use 2.0.1 for Java 7 projects -->
+            <version>3.5.0</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 </project>
