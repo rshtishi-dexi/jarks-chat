@@ -21,7 +21,6 @@ function onJoinedUser(user) {
      * TO DO
      * add check for user input
      */
-    debugger;
     users = localStorage.getItem("users");
     if (Array.isArray(users)) {
         users = JSON.parse(users);
