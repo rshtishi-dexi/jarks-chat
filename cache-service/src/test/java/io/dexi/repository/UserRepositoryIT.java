@@ -54,4 +54,12 @@ class UserRepositoryIT {
         Optional<User> possibleUser = userRepository.findById(user.getUsername());
         assertThat(possibleUser.isPresent()).isEqualTo(false);
     }
+
+    @Test
+    void when_userHashIsEmpty_findAllWillReturnEmptyList(){
+        //execute
+        List<User> userList = userRepository.findAll();
+        //verify
+        assertThat(userList).hasSize(0);
+    }
 }

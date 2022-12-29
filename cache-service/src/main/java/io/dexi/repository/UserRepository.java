@@ -10,4 +10,6 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends CrudRepository<User, String> {
 
+    List<User> findAll();
+
 }
