@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -40,5 +41,17 @@ class UserRepositoryIT {
         //verify
         assertThat(userFound).isNotNull();
         assertThat(userFound.getUsername()).isEqualTo(userFound.getUsername());
+    }
+
+    @Test
+    void when_userWithUsernameIsPresent_deleteByIdWillSucceed(){
+        //setup
+        User user = new User("test","");
+        user = userRepository.save(user);
+        //execute
+        userRepository.deleteById(user.getUsername());
+        //verify
+        Optional<User> possibleUser = userRepository.findById(user.getUsername());
+        assertThat(possibleUser.isPresent()).isEqualTo(false);
     }
 }
