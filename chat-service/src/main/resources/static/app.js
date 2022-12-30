@@ -1,9 +1,19 @@
+endpoint = "http://localhost:8091/users";
+
 function setConnected(connected) {
     localStorage.setItem("connected", JSON.stringify(connected));
 }
 
+function setUsername(username) {
+    localStorage.setItem("username", username);
+}
+
 function getConnected() {
     return JSON.parse(localStorage.getItem("connected"));
+}
+
+function getUsername() {
+    return localStorage.getItem("username");
 }
 
 function refreshView() {
@@ -21,28 +31,39 @@ function onJoinedUser(user) {
      * TO DO
      * add check for user input
      */
-    users = localStorage.getItem("users");
-    if (Array.isArray(users)) {
-        users = JSON.parse(users);
-        users.push(user);
-    } else {
-        users = [];
-        users.push(user);
-    }
-    localStorage.setItem("users", JSON.stringify(users));
+    $.ajax({
+        url: endpoint,
+        contentType: "application/json",
+        dataType: 'json',
+        data: JSON.stringify(user),
+        method: "POST",
+        headers: {
+            'Access-Control-Allow-Origin': '*',
+        },
+        success: function (result) {
+            console.log(result);
+        }
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+        console.log(textStatus);
+        console.log(errorThrown);
+    });
+    ;
 }
 
-function onLeftUser(user) {
+function onLeftUser(username, stompClient) {
     /**
      * TO DO
      * add check for input
      */
-    users = JSON.parse(localStorage.getItem("users"));
-    if (Array.isArray(users)) {
-        const index = users.indexOf(user);
-        users.splice(index, 1);
-        localStorage.setItem("users", users);
-    }
+    $.ajax({
+        url: endpoint + "/" + username,
+        contentType: "application/json",
+        method: "DELETE",
+        success: function (result) {
+            console.log("DELETED " + username);
+            stompClient.disconnect();
+        }
+    });
 }
 
 // OLD METHODS
@@ -160,6 +181,7 @@ $(function () {
 
                 //change view
                 setConnected(true);
+                setUsername(username);
                 refreshView();
 
                 //send join event
@@ -172,12 +194,13 @@ $(function () {
                 stompClient.subscribe("/events", function (message) {
                     var message = JSON.parse(message.body);
                     if (message.type === "JOIN") {
-                        onJoinedUser(message.sender);
-                    } else if (message.type == "LEFT") {
-                        /**
-                         * TO DO
-                         * Add logic for LEFT EVENT
-                         */
+                        var user = {username: message.sender}
+                        console.log(user);
+                        onJoinedUser(user);
+                    } else if (message.type == "LEAVE") {
+                        console.log(message.sender)
+                        onLeftUser(message.sender, stompClient);
+                        ;
                     }
                 });
 
@@ -189,7 +212,10 @@ $(function () {
     });
 
     $("#signOut").on("click", function () {
-        stompClient.disconnect();
+        stompClient.send("/app/leave", {}, JSON.stringify({
+            'sender': getUsername(),
+            'type': 'LEAVE'
+        }));
         setConnected(false);
         refreshView();
     })
