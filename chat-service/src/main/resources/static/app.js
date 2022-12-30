@@ -66,6 +66,30 @@ function onLeftUser(username, stompClient) {
     });
 }
 
+function updateChatList() {
+    $.ajax({
+        url: endpoint,
+        contentType: "application/json",
+        method: "GET",
+        success: function (users) {
+            for ( user of users) {
+                if(user.username === getUsername()){
+                    continue;
+                }
+                $("#chat-list").append('<li class="clearfix">\n' +
+                    '                                <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="avatar">\n' +
+                    '                                <div class="about">\n' +
+                    '                                    <div class="name">' + user.username + '</div>\n' +
+                    '                                    <div class="status"> <i class="fa fa-circle offline"></i> offline since Oct 28 </div>\n' +
+                    '                                </div>\n' +
+                    '                            </li>'
+                );
+            }
+
+        }
+    });
+}
+
 // OLD METHODS
 function connect() {
     var socket = new SockJS('/jarks-ws');
@@ -153,12 +177,14 @@ function showUsers(sender, type) {
 
 // END OF OLD METHODS
 
+
 $(function () {
 
     var socket, stompClient;
 
     //display correct view
     refreshView();
+
 
     $("#login-form").on('submit', function (e) {
 
@@ -183,6 +209,7 @@ $(function () {
                 setConnected(true);
                 setUsername(username);
                 refreshView();
+                updateChatList();
 
                 //send join event
                 stompClient.send("/app/join", {}, JSON.stringify({
@@ -200,7 +227,6 @@ $(function () {
                     } else if (message.type == "LEAVE") {
                         console.log(message.sender)
                         onLeftUser(message.sender, stompClient);
-                        ;
                     }
                 });
 
