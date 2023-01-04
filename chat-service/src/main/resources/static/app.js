@@ -42,6 +42,7 @@ function onJoinedUser(user) {
         },
         success: function (result) {
             console.log(result);
+            updateChatList();
         }
     }).fail(function (jqXHR, textStatus, errorThrown) {
         console.log(textStatus);
@@ -61,6 +62,7 @@ function onLeftUser(username, stompClient) {
         method: "DELETE",
         success: function (result) {
             console.log("DELETED " + username);
+            updateChatList();
             stompClient.disconnect();
         }
     });
@@ -239,12 +241,10 @@ $(document).ready(function () {
                             var user = {username: message.sender}
                             console.log(user);
                             onJoinedUser(user);
-                            updateChatList();
                             displayLoginUser();
                         } else if (message.type == "LEAVE") {
                             console.log(message.sender)
                             onLeftUser(message.sender, stompClient);
-                            updateChatList();
                         }
                     });
 
