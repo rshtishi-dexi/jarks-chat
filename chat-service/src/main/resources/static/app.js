@@ -67,27 +67,42 @@ function onLeftUser(username, stompClient) {
 }
 
 function updateChatList() {
+    clearChatList();
     $.ajax({
         url: endpoint,
         contentType: "application/json",
         method: "GET",
         success: function (users) {
-            for ( user of users) {
-                if(user.username === getUsername()){
+            console.log("users");
+            console.log(users);
+            for (user of users) {
+                if (user === null || user.username === getUsername()) {
                     continue;
                 }
-                $("#chat-list").append('<li class="clearfix">\n' +
-                    '                                <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="avatar">\n' +
-                    '                                <div class="about">\n' +
-                    '                                    <div class="name">' + user.username + '</div>\n' +
-                    '                                    <div class="status"> <i class="fa fa-circle offline"></i> offline since Oct 28 </div>\n' +
-                    '                                </div>\n' +
-                    '                            </li>'
-                );
+                displayUser(user);
             }
 
         }
     });
+}
+
+function clearChatList(){
+    $("#chat-list").empty();
+}
+
+function displayUser(user) {
+    $("#chat-list").append('<li class="clearfix">\n' +
+        '                                <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="avatar">\n' +
+        '                                <div class="about">\n' +
+        '                                    <div class="name">' + user.username + '</div>\n' +
+        '                                    <div class="status"> <i class="fa fa-circle offline"></i> offline since Oct 28 </div>\n' +
+        '                                </div>\n' +
+        '                            </li>'
+    );
+}
+
+function displayLoginUser() {
+    $("#login-user").text(getUsername());
 }
 
 // OLD METHODS
@@ -177,74 +192,80 @@ function showUsers(sender, type) {
 
 // END OF OLD METHODS
 
+$(document).ready(function () {
 
-$(function () {
+    $(window).on("load", function () {
 
-    var socket, stompClient;
+        var socket, stompClient;
 
-    //display correct view
-    refreshView();
+        //display correct view
+        refreshView();
 
 
-    $("#login-form").on('submit', function (e) {
+        $("#login-form").on('submit', function (e) {
 
-        var username = $("#username").val();
-        var password = $("#password").val();
-        if (username && password) {
-            console.log(username);
-            console.log(password);
-            /**
-             * TO DO
-             * Authentication
-             */
+            var username = $("#username").val();
+            var password = $("#password").val();
+            if (username && password) {
+                console.log(username);
+                console.log(password);
+                /**
+                 * TO DO
+                 * Authentication
+                 */
 
-            //Connect
-            socket = new SockJS('/jarks-ws');
-            stompClient = Stomp.over(socket);
-            console.log(socket);
-            console.log(stompClient);
-            stompClient.connect({}, function (frame) {
+                //Connect
+                socket = new SockJS('/jarks-ws');
+                stompClient = Stomp.over(socket);
+                console.log(socket);
+                console.log(stompClient);
+                stompClient.connect({}, function (frame) {
 
-                //change view
-                setConnected(true);
-                setUsername(username);
-                refreshView();
-                updateChatList();
+                    //change view
+                    setConnected(true);
+                    setUsername(username);
+                    refreshView();
 
-                //send join event
-                stompClient.send("/app/join", {}, JSON.stringify({
-                    'sender': username,
-                    'type': 'JOIN'
-                }));
+                    //send join event
+                    stompClient.send("/app/join", {}, JSON.stringify({
+                        'sender': username,
+                        'type': 'JOIN'
+                    }));
 
-                //subscribe to events channel
-                stompClient.subscribe("/events", function (message) {
-                    var message = JSON.parse(message.body);
-                    if (message.type === "JOIN") {
-                        var user = {username: message.sender}
-                        console.log(user);
-                        onJoinedUser(user);
-                    } else if (message.type == "LEAVE") {
-                        console.log(message.sender)
-                        onLeftUser(message.sender, stompClient);
-                    }
+                    //subscribe to events channel
+                    stompClient.subscribe("/events", function (message) {
+                        var message = JSON.parse(message.body);
+                        if (message.type === "JOIN") {
+                            var user = {username: message.sender}
+                            console.log(user);
+                            onJoinedUser(user);
+                            updateChatList();
+                            displayLoginUser();
+                        } else if (message.type == "LEAVE") {
+                            console.log(message.sender)
+                            onLeftUser(message.sender, stompClient);
+                            updateChatList();
+                        }
+                    });
+
                 });
 
-            });
+                e.preventDefault();
+            }
 
-            e.preventDefault();
-        }
+        });
+
+        $("#signOut").on("click", function (e) {
+            e.preventDefault(e);
+            stompClient.send("/app/leave", {}, JSON.stringify({
+                'sender': getUsername(),
+                'type': 'LEAVE'
+            }));
+            setConnected(false);
+            refreshView();
+        })
+
 
     });
-
-    $("#signOut").on("click", function () {
-        stompClient.send("/app/leave", {}, JSON.stringify({
-            'sender': getUsername(),
-            'type': 'LEAVE'
-        }));
-        setConnected(false);
-        refreshView();
-    })
-
 
 });
