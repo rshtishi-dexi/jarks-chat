@@ -63,7 +63,7 @@ function onLeftUser(username, stompClient) {
         success: function (result) {
             console.log("DELETED " + username);
             updateChatList();
-            stompClient.disconnect();
+            stompClient.unsubscribe();
         }
     });
 }
