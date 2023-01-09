@@ -75,6 +75,7 @@ function updateChatList() {
         contentType: "application/json",
         method: "GET",
         success: function (users) {
+            clearChatList();
             console.log("users");
             console.log(users);
             for (user of users) {
@@ -205,7 +206,7 @@ $(document).ready(function () {
 
 
         $("#login-form").on('submit', function (e) {
-
+            e.preventDefault();
             var username = $("#username").val();
             var password = $("#password").val();
             if (username && password) {
