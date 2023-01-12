@@ -41,7 +41,6 @@ function onJoinedUser(user) {
             'Access-Control-Allow-Origin': '*',
         },
         success: function (result) {
-            console.log(result);
             updateChatList();
         }
     }).fail(function (jqXHR, textStatus, errorThrown) {
@@ -89,7 +88,7 @@ function updateChatList() {
     });
 }
 
-function clearChatList(){
+function clearChatList() {
     $("#chat-list").empty();
 }
 
@@ -106,6 +105,26 @@ function displayUser(user) {
 
 function displayLoginUser() {
     $("#login-user").text(getUsername());
+}
+
+function handleChatListEvent(message, stompClient) {
+    var message = JSON.parse(message.body);
+    if (message.type === "JOIN") {
+        var user = {username: message.sender}
+        onJoinedUser(user);
+        displayLoginUser();
+    } else if (message.type == "LEAVE") {
+        onLeftUser(message.sender, stompClient);
+    }
+}
+
+function signOut(stompClient) {
+    stompClient.send("/app/leave", {}, JSON.stringify({
+        'sender': getUsername(),
+        'type': 'LEAVE'
+    }));
+    setConnected(false);
+    refreshView();
 }
 
 // OLD METHODS
@@ -210,8 +229,6 @@ $(document).ready(function () {
             var username = $("#username").val();
             var password = $("#password").val();
             if (username && password) {
-                console.log(username);
-                console.log(password);
                 /**
                  * TO DO
                  * Authentication
@@ -220,8 +237,6 @@ $(document).ready(function () {
                 //Connect
                 socket = new SockJS('/jarks-ws');
                 stompClient = Stomp.over(socket);
-                console.log(socket);
-                console.log(stompClient);
                 stompClient.connect({}, function (frame) {
 
                     //change view
@@ -237,16 +252,7 @@ $(document).ready(function () {
 
                     //subscribe to events channel
                     stompClient.subscribe("/events", function (message) {
-                        var message = JSON.parse(message.body);
-                        if (message.type === "JOIN") {
-                            var user = {username: message.sender}
-                            console.log(user);
-                            onJoinedUser(user);
-                            displayLoginUser();
-                        } else if (message.type == "LEAVE") {
-                            console.log(message.sender)
-                            onLeftUser(message.sender, stompClient);
-                        }
+                        handleChatListEvent(message, stompClient);
                     });
 
                 });
@@ -258,12 +264,7 @@ $(document).ready(function () {
 
         $("#signOut").on("click", function (e) {
             e.preventDefault(e);
-            stompClient.send("/app/leave", {}, JSON.stringify({
-                'sender': getUsername(),
-                'type': 'LEAVE'
-            }));
-            setConnected(false);
-            refreshView();
+            signOut(stompClient);
         })
 
 
