@@ -78,6 +78,7 @@ function updateChatList() {
                 if (user === null || user.username === getUsername()) {
                     continue;
                 }
+
                 displayUser(user);
             }
 
@@ -93,16 +94,30 @@ function displayUser(user) {
     $("#chat-list").append('<li "class="clearfix">\n' +
         '                                <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="avatar">\n' +
         '                                <div class="about">\n' +
-        '                                    <div class="name">' + user.username + '</div>\n' +
+        '                                    <div class="name" onClick="showMessages(this)">' + user.username + '</div>\n' +
         '                                    <div class="status"> <i class="fa fa-circle offline"></i> offline since Oct 28 </div>\n' +
         '                                </div>\n' +
         '                            </li>'
     );
 }
 
-function test(username){
-    console.log("username");
-    console.log(username);
+function showMessages(event) {
+    console.log(event.innerText);
+    $("#chat-messages").append('                                ' +
+        '                               <li class="clearfix">\n' +
+        '                                    <div class="message-data text-right">\n' +
+        '                                        <span class="message-data-time">'+event.innerText+'</span>\n' +
+        '                                        <span class="message-data-time">10:10 AM, Today</span>\n' +
+        '                                        <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="avatar">\n' +
+        '                                    </div>\n' +
+        '                                    <div class="message other-message float-right"> Hi Aiden, how are you? How is the project coming along? </div>\n' +
+        '                                </li>\n' +
+        '                                <li class="clearfix">\n' +
+        '                                    <div class="message-data">\n' +
+        '                                        <span class="message-data-time">10:12 AM, Today</span>\n' +
+        '                                    </div>\n' +
+        '                                    <div class="message my-message">Are we meeting today?</div>\n' +
+        '                                </li>');
 }
 
 function displayLoginUser() {
@@ -129,7 +144,7 @@ function signOut(stompClient) {
     refreshView();
 }
 
-function connect(stompClient,username) {
+function connect(stompClient, username) {
     stompClient.connect({}, function (frame) {
 
         //change view
@@ -153,45 +168,45 @@ function connect(stompClient,username) {
 
 // OLD METHODS
 function connectold(stompClient) {
-/*
-    stompClient.connect({}, function (frame) {
+    /*
+        stompClient.connect({}, function (frame) {
 
-        setConnected(true);
-        console.log('Connected: ' + frame);
+            setConnected(true);
+            console.log('Connected: ' + frame);
 
-        //send join event
-        stompClient.send("/app/join", {}, JSON.stringify({
-            'sender': $("#username").val(),
-            'type': 'JOIN'
-        }));
+            //send join event
+            stompClient.send("/app/join", {}, JSON.stringify({
+                'sender': $("#username").val(),
+                'type': 'JOIN'
+            }));
 
-        //subscribe to public channel
-        stompClient.subscribe('/jarks', function (message) {
-            console.log(message);
-            showPublicMessages(JSON.parse(message.body).sender, JSON.parse(message.body).content);
-        });
+            //subscribe to public channel
+            stompClient.subscribe('/jarks', function (message) {
+                console.log(message);
+                showPublicMessages(JSON.parse(message.body).sender, JSON.parse(message.body).content);
+            });
 
-        //subscribe to private channel
-        stompClient.subscribe("/user/" + $("#username").val(), function (message) {
-            console.log(message)
-            showMessages(JSON.parse(message.body).sender, JSON.parse(message.body).content);
-        });
+            //subscribe to private channel
+            stompClient.subscribe("/user/" + $("#username").val(), function (message) {
+                console.log(message)
+                showMessages(JSON.parse(message.body).sender, JSON.parse(message.body).content);
+            });
 
-        //subscribe to private channel
-        stompClient.subscribe("/events", function (message) {
-            console.log(message)
-            showUsers(JSON.parse(message.body).sender, JSON.parse(message.body).type);
-            if (JSON.parse(message.body).type === 'LEAVE') {
+            //subscribe to private channel
+            stompClient.subscribe("/events", function (message) {
+                console.log(message)
+                showUsers(JSON.parse(message.body).sender, JSON.parse(message.body).type);
+                if (JSON.parse(message.body).type === 'LEAVE') {
 
-                if (stompClient !== null) {
-                    stompClient.disconnect();
+                    if (stompClient !== null) {
+                        stompClient.disconnect();
+                    }
+                    setConnected(false);
+                    console.log("Disconnected");
+
                 }
-                setConnected(false);
-                console.log("Disconnected");
-
-            }
-        });
-    });*/
+            });
+        });*/
 }
 
 function disconnect() {
@@ -221,15 +236,15 @@ function sendMessage() {
     }));
 }
 
-function showPublicMessages(sender, message) {
+function showPublicMessagesx(sender, message) {
     $("#messages-public").append("<tr><td>" + sender + "</td></td><td>" + message + "</td></tr>");
 }
 
-function showMessages(sender, message) {
+function showMessagesx(sender, message) {
     $("#messages").append("<tr><td>" + sender + "</td></td><td>" + message + "</td></tr>");
 }
 
-function showUsers(sender, type) {
+function showUsersx(sender, type) {
     $("#users").append("<tr><td>" + sender + "</td></td><td>" + type + "</td></tr>");
 }
 
@@ -257,7 +272,7 @@ $(document).ready(function () {
                 //Connect
                 socket = new SockJS('/jarks-ws');
                 stompClient = Stomp.over(socket);
-                connect(stompClient,username);
+                connect(stompClient, username);
                 e.preventDefault();
             }
 

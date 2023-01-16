@@ -51,7 +51,7 @@ body {
     background: #efefef
 }
 
-.people-list .chat-list li .name {
+.people-list .chat-list li.name {
     font-size: 15px
 }
 
