@@ -60,7 +60,6 @@ function onLeftUser(username, stompClient) {
         contentType: "application/json",
         method: "DELETE",
         success: function (result) {
-            console.log("DELETED " + username);
             updateChatList();
             stompClient.unsubscribe();
         }
@@ -75,8 +74,6 @@ function updateChatList() {
         method: "GET",
         success: function (users) {
             clearChatList();
-            console.log("users");
-            console.log(users);
             for (user of users) {
                 if (user === null || user.username === getUsername()) {
                     continue;
@@ -93,7 +90,7 @@ function clearChatList() {
 }
 
 function displayUser(user) {
-    $("#chat-list").append('<li class="clearfix">\n' +
+    $("#chat-list").append('<li "class="clearfix">\n' +
         '                                <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="avatar">\n' +
         '                                <div class="about">\n' +
         '                                    <div class="name">' + user.username + '</div>\n' +
@@ -101,6 +98,11 @@ function displayUser(user) {
         '                                </div>\n' +
         '                            </li>'
     );
+}
+
+function test(username){
+    console.log("username");
+    console.log(username);
 }
 
 function displayLoginUser() {
@@ -127,12 +129,31 @@ function signOut(stompClient) {
     refreshView();
 }
 
+function connect(stompClient,username) {
+    stompClient.connect({}, function (frame) {
+
+        //change view
+        setConnected(true);
+        setUsername(username);
+        refreshView();
+
+        //send join event
+        stompClient.send("/app/join", {}, JSON.stringify({
+            'sender': username,
+            'type': 'JOIN'
+        }));
+
+        //subscribe to events channel
+        stompClient.subscribe("/events", function (message) {
+            handleChatListEvent(message, stompClient);
+        });
+
+    });
+}
+
 // OLD METHODS
-function connect() {
-    var socket = new SockJS('/jarks-ws');
-
-    stompClient = Stomp.over(socket);
-
+function connectold(stompClient) {
+/*
     stompClient.connect({}, function (frame) {
 
         setConnected(true);
@@ -170,7 +191,7 @@ function connect() {
 
             }
         });
-    });
+    });*/
 }
 
 function disconnect() {
@@ -233,30 +254,10 @@ $(document).ready(function () {
                  * TO DO
                  * Authentication
                  */
-
                 //Connect
                 socket = new SockJS('/jarks-ws');
                 stompClient = Stomp.over(socket);
-                stompClient.connect({}, function (frame) {
-
-                    //change view
-                    setConnected(true);
-                    setUsername(username);
-                    refreshView();
-
-                    //send join event
-                    stompClient.send("/app/join", {}, JSON.stringify({
-                        'sender': username,
-                        'type': 'JOIN'
-                    }));
-
-                    //subscribe to events channel
-                    stompClient.subscribe("/events", function (message) {
-                        handleChatListEvent(message, stompClient);
-                    });
-
-                });
-
+                connect(stompClient,username);
                 e.preventDefault();
             }
 
