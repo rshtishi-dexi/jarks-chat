@@ -36,6 +36,11 @@ body {
     transition: .5s
 }
 
+#chat-list {
+    overflow-y: scroll;
+    height: 550px;
+}
+
 .people-list .chat-list li {
     padding: 10px 15px;
     list-style: none;
