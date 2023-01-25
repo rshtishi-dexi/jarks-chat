@@ -91,7 +91,7 @@ function clearChatList() {
 }
 
 function displayUser(user) {
-    $("#chat-list").append('<li "class="clearfix">\n' +
+    $("#chat-list").append('<li class="clearfix">\n' +
         '                                <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="avatar">\n' +
         '                                <div class="about">\n' +
         '                                    <div class="name" onClick="showMessages(this)">' + user.username + '</div>\n' +

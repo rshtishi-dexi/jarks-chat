@@ -93,7 +93,9 @@ body {
 
 .chat .chat-history {
     padding: 20px;
-    border-bottom: 2px solid #fff
+    border-bottom: 2px solid #fff;
+    height: 500px;
+    overflow-y: scroll;
 }
 
 .chat .chat-history ul {
@@ -172,7 +174,7 @@ body {
 
 .chat .chat-history .other-message:after {
     border-bottom-color: #e8f1f3;
-    left: 93%
+    left: 93%;
 }
 
 .chat .chat-message {
@@ -262,4 +264,8 @@ body {
         height: calc(100vh - 350px);
         overflow-x: auto
     }
+}
+
+#login-user {
+    margin: 10px 10px 10px 10px;
 }
