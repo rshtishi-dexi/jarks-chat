@@ -8,12 +8,20 @@ function setUsername(username) {
     localStorage.setItem("username", username);
 }
 
+function setProfileImage(image) {
+    localStorage.setItem("profile", image);
+}
+
 function getConnected() {
     return JSON.parse(localStorage.getItem("connected"));
 }
 
 function getUsername() {
     return localStorage.getItem("username");
+}
+
+function getProfileImage() {
+    return localStorage.getItem("profile");
 }
 
 function refreshView() {
@@ -106,7 +114,7 @@ function showMessages(event) {
     $("#chat-messages").append('                                ' +
         '                               <li class="clearfix">\n' +
         '                                    <div class="message-data text-right">\n' +
-        '                                        <span class="message-data-time">'+event.innerText+'</span>\n' +
+        '                                        <span class="message-data-time">' + event.innerText + '</span>\n' +
         '                                        <span class="message-data-time">10:10 AM, Today</span>\n' +
         '                                        <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="avatar">\n' +
         '                                    </div>\n' +
@@ -122,6 +130,8 @@ function showMessages(event) {
 
 function displayLoginUser() {
     $("#login-user").text(getUsername());
+    console.log(getProfileImage());
+    $("#profile").attr("src", getProfileImage());
 }
 
 function handleChatListEvent(message, stompClient) {
@@ -144,12 +154,13 @@ function signOut(stompClient) {
     refreshView();
 }
 
-function connect(stompClient, username) {
+function connect(stompClient, username, image) {
     stompClient.connect({}, function (frame) {
 
         //change view
         setConnected(true);
         setUsername(username);
+        setProfileImage(image);
         refreshView();
 
         //send join event
@@ -264,6 +275,7 @@ $(document).ready(function () {
             e.preventDefault();
             var username = $("#username").val();
             var password = $("#password").val();
+            var image = $("#image").val();
             if (username && password) {
                 /**
                  * TO DO
@@ -272,7 +284,7 @@ $(document).ready(function () {
                 //Connect
                 socket = new SockJS('/jarks-ws');
                 stompClient = Stomp.over(socket);
-                connect(stompClient, username);
+                connect(stompClient, username, image);
                 e.preventDefault();
             }
 
