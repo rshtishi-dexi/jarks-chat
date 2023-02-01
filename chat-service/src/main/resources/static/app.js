@@ -100,7 +100,7 @@ function clearChatList() {
 
 function displayUser(user) {
     $("#chat-list").append('<li class="clearfix">\n' +
-        '                                <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="avatar">\n' +
+        '                                <img src="' + user.imageSource + '" alt="avatar">\n' +
         '                                <div class="about">\n' +
         '                                    <div class="name" onClick="showMessages(this)">' + user.username + '</div>\n' +
         '                                    <div class="status"> <i class="fa fa-circle offline"></i> offline since Oct 28 </div>\n' +
@@ -137,7 +137,7 @@ function displayLoginUser() {
 function handleChatListEvent(message, stompClient) {
     var message = JSON.parse(message.body);
     if (message.type === "JOIN") {
-        var user = {username: message.sender}
+        var user = {username: message.sender, imageSource: message.content};
         onJoinedUser(user);
         displayLoginUser();
     } else if (message.type == "LEAVE") {
@@ -166,6 +166,7 @@ function connect(stompClient, username, image) {
         //send join event
         stompClient.send("/app/join", {}, JSON.stringify({
             'sender': username,
+            'content': image,
             'type': 'JOIN'
         }));
 
