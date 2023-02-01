@@ -2,6 +2,7 @@ package io.dexi.repository;
 
 import io.dexi.config.TestRedisConfiguration;
 import io.dexi.entity.User;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,11 @@ class UserRepositoryIT {
 
     @Autowired
     private UserRepository userRepository;
+
+    @AfterEach
+    void tearDown() {
+        userRepository.deleteAll();
+    }
 
     @Test
     void when_userIsValid_then_saveWillSucceed() {
@@ -44,9 +50,9 @@ class UserRepositoryIT {
     }
 
     @Test
-    void when_userWithUsernameIsPresent_deleteByIdWillSucceed(){
+    void when_userWithUsernameIsPresent_deleteByIdWillSucceed() {
         //setup
-        User user = new User("test","");
+        User user = new User("test", "");
         user = userRepository.save(user);
         //execute
         userRepository.deleteById(user.getUsername());
@@ -56,7 +62,7 @@ class UserRepositoryIT {
     }
 
     @Test
-    void when_userHashIsEmpty_findAllWillReturnEmptyList(){
+    void when_userHashIsEmpty_findAllWillReturnEmptyList() {
         //execute
         List<User> userList = userRepository.findAll();
         //verify
